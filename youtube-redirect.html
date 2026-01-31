@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening YouTube...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .youtube-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #FF0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        .youtube-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .channel-name {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-primary {
+            background: #FF0000;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .info {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .loader {
+            margin: 20px auto;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FF0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="youtube-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M10,16.5V7.5L16,12M20,4.4C19.4,4.2 15.7,4 12,4C8.3,4 4.6,4.19 4,4.38C2.44,4.9 2,8.4 2,12C2,15.59 2.44,19.1 4,19.61C4.6,19.81 8.3,20 12,20C15.7,20 19.4,19.81 20,19.61C21.56,19.1 22,15.59 22,12C22,8.4 21.56,4.91 20,4.4Z" />
+            </svg>
+        </div>
+        
+        <h1>Opening YouTube Channel</h1>
+        <p class="channel-name">@kathauskaalki</p>
+        
+        <div id="loading" class="hidden">
+            <div class="loader"></div>
+            <p style="color: #666; margin-top: 10px;">Attempting to open YouTube app...</p>
+        </div>
+        
+        <div id="buttons">
+            <a href="vnd.youtube://www.youtube.com/@kathauskaalki" class="btn btn-primary" id="appLink">
+                📱 Open in YouTube App
+            </a>
+            
+            <a href="https://www.youtube.com/@kathauskaalki" class="btn btn-secondary" target="_blank" id="browserLink">
+                🌐 Open in Browser
+            </a>
+        </div>
+        
+        <div class="info">
+            <strong>💡 Tip for Instagram users:</strong><br>
+            If viewing in Instagram, tap the three dots (⋯) at the bottom and select "Open in Browser" for the best experience!
+        </div>
+    </div>
+
+    <script>
+        // Attempt automatic deep link on page load
+        window.onload = function() {
+            // Check if we're likely in Instagram's in-app browser
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isInstagram = (userAgent.indexOf('Instagram') > -1);
+            
+            // Try to open the app automatically after a brief delay
+            setTimeout(function() {
+                // Try multiple deep link formats for better compatibility
+                const deepLinks = [
+                    'vnd.youtube://www.youtube.com/@kathauskaalki',
+                    'youtube://www.youtube.com/@kathauskaalki',
+                    'https://www.youtube.com/@kathauskaalki'
+                ];
+                
+                // Create a hidden iframe to attempt the deep link
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = deepLinks[0];
+                document.body.appendChild(iframe);
+                
+                // Remove iframe after attempt
+                setTimeout(function() {
+                    document.body.removeChild(iframe);
+                }, 1000);
+            }, 500);
+        };
+        
+        // Handle app link click
+        document.getElementById('appLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('buttons').classList.add('hidden');
+            
+            // Try to open the app
+            window.location.href = 'vnd.youtube://www.youtube.com/@kathauskaalki';
+            
+            // Fallback: if app doesn't open in 2 seconds, show buttons again and try browser
+            setTimeout(function() {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('buttons').classList.remove('hidden');
+                
+                // Fallback to browser
+                window.open('https://www.youtube.com/@kathauskaalki', '_blank');
+            }, 2000);
+        });
+        
+        // Track clicks
+        document.getElementById('browserLink').addEventListener('click', function() {
+            console.log('Opening in browser');
+        });
+    </script>
+</body>
+</html>
